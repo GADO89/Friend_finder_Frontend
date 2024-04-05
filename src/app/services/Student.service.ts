@@ -34,6 +34,13 @@ export class StudentService {
   editStudent(student: Student, id:number ){
     return this.httpStudent.put(this.urlStudents + `?id=${id}`, student);
   }
+  getStudentByName(name:String):Observable<Student[]>{
+    return this.httpStudent.get<Student[]>(this.urlStudents + `/searchname?fullName=${name}`).pipe(
+      map(response => response)
+    );
+  }
+
+
 }
 // interface GetResponseStudent {
 //   _embedded: {

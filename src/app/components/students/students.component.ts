@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Student } from '../../model/student';
 import { StudentService } from '../../services/Student.service';
 import {response} from "express";
+import {ActivatedRoute} from "@angular/router";
 
 @Component({
   selector: 'app-students',
@@ -13,14 +14,26 @@ export class StudentsComponent implements OnInit{
   students!: Student[];
   message!: String;
 
-  constructor(private studentService: StudentService) {
+  constructor(private studentService: StudentService, private route: ActivatedRoute) {
   }
   ngOnInit(): void {
-    this.getStudents();
+    const result = this.route.snapshot.paramMap.has("name");
+    if (result== true){
+      const name = this.route.snapshot.paramMap.get("name");
+      this.getStudentsByName(name)
+    } else {
+      this.getStudents();
+    }
   }
 
   getStudents(){
     this.studentService.getStudents().subscribe(
+      data => this.students = data
+    );
+  }
+
+   getStudentsByName(name: String) {
+    this.studentService.getStudentByName(name).subscribe(
       data => this.students = data
     );
   }
@@ -39,5 +52,6 @@ export class StudentsComponent implements OnInit{
       this.message = ""
     },3000)
   }
+
 
 }
