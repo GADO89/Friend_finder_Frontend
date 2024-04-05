@@ -1,0 +1,36 @@
+<form [formGroup]="studentGroup" (ngSubmit)="Done()">
+  <div formGroupName="student">
+   <div *ngIf="invalidFullName" class="alert alert-danger">{{invalidFullName}}</div>
+  <div class="input-group flex-nowrap ipu">
+  <div class="input-group-prepend">
+  </div>
+  <input [value]="myStudent.fullName" formControlName="userName"type="text" class="form-control" placeholder="Full Name" aria-label="Username" aria-describedby="addon-wrapping">
+</div>
+
+<div class="input-group flex-nowrap ipu">
+  <div class="input-group-prepend">
+  </div>
+  <input [value]="myStudent.age" formControlName="age" type="text" class="form-control" placeholder="Age" aria-label="Password" aria-describedby="addon-wrapping">
+</div>
+
+<div class="input-group flex-nowrap ipu">
+  <div class="input-group-prepend">
+  </div>
+  <input [value]="myStudent.address" formControlName="address"  type="text" class="form-control" placeholder="Address" aria-label="Username" aria-describedby="addon-wrapping">
+</div>
+
+<div class="input-group flex-nowrap ipu">
+  <div class="input-group-prepend">
+  </div>
+  <input [value]="myStudent.phone"  formControlName="phone" type="text" class="form-control" placeholder="Phone" aria-label="Password" aria-describedby="addon-wrapping">
+</div>
+
+<select [value]="myStudent.gender" formControlName="gender" class="form-select" aria-label="Default select example">
+  <option value="MALE">MALE</option>
+  <option value="FEMALE">FEMALE</option>
+</select>
+<div>
+  <button class="btn btn-primary">Done</button>
+</div>
+    </div>
+</form>
