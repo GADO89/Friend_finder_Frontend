@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Student } from '../../model/student';
 import { StudentService } from '../../services/Student.service';
-import {response} from "express";
 import {ActivatedRoute} from "@angular/router";
 
 @Component({
@@ -13,28 +12,33 @@ export class StudentsComponent implements OnInit{
 
   students!: Student[];
   message!: String;
-
+  page?: number=1;
+  size?:number=1;
+  numElement:number= 8;
   constructor(private studentService: StudentService, private route: ActivatedRoute) {
   }
   ngOnInit(): void {
-    const result = this.route.snapshot.paramMap.has("name");
-    if (result== true){
-      const name = this.route.snapshot.paramMap.get("name");
-      this.getStudentsByName(name)
-    } else {
-      this.getStudents();
-    }
+    this.route.paramMap.subscribe(() =>{
+      const result = this.route.snapshot.paramMap.has("name");
+      if (result== true){
+        const name = this.route.snapshot.paramMap.get("name");
+        this.getStudentsByName(name)
+      } else {
+        this.getStudents();
+      }
+    })
+
   }
 
   getStudents(){
-    this.studentService.getStudents().subscribe(
+    this.studentService.getStudents(this.page-1, this.size).subscribe(
       data => this.students = data
     );
   }
 
    getStudentsByName(name: String) {
     this.studentService.getStudentByName(name).subscribe(
-      data => this.students = data
+      data =>this.students = data
     );
   }
   removeStudent(id: number){
@@ -54,4 +58,8 @@ export class StudentsComponent implements OnInit{
   }
 
 
+  done() {
+   this.getStudents()
+
+  }
 }

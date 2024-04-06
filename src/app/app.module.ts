@@ -15,6 +15,7 @@ import {RegisterComponent} from "./components/register/register.component";
 import { ContentComponent } from './components/content/content.component';
 import {RouteActivatedService} from "./services/route-activated-service.service";
 import {LoginActivatedService} from "./services/login-activated-service.service";
+import {NgbPagination} from "@ng-bootstrap/ng-bootstrap";
 
 const routes: Routes=[
 
@@ -45,7 +46,8 @@ const routes: Routes=[
     AppRoutingModule,
     ReactiveFormsModule,
     RouterModule.forRoot(routes),
-    HttpClientModule
+    HttpClientModule,
+    NgbPagination
   ],
   providers: [],
   bootstrap: [AppComponent]
