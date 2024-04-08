@@ -1,20 +1,23 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, map } from 'rxjs';
-import { Student } from '../model/student';
-import {response} from "express";
+import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {Student} from '../model/student';
+import {Observable} from 'rxjs';
+import {map} from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
 })
-export class StudentService {
 
+export class StudentService {
 
   private urlStudents = 'http://localhost:8080/system/students';
   constructor(private httpStudent: HttpClient) { }
 
   getStudents(page,size): Observable<Student[]> {
-    return this.httpStudent.get<Student[]>(this.urlStudents+`?page=${page}&size=${size}`).pipe(
+    let header = new HttpHeaders({
+      Authorization: this.createBasicAuthenticationHttpHeader()
+    })
+    return this.httpStudent.get<Student[]>(this.urlStudents + `?page=${page}&size=${size}`,{headers : header}).pipe(
       map(response => response)
     );
   }
@@ -30,24 +33,35 @@ export class StudentService {
       map(response => response)
     );
   }
-
-  editStudent(student: Student, id:number ){
-    return this.httpStudent.put(this.urlStudents + `?id=${id}`, student);
+  editStudent(student: Student,id: number){
+    return this.httpStudent.put(this.urlStudents + `?id=${id}` , student);
   }
-  getStudentByName(name:String):Observable<Student[]>{
-    return this.httpStudent.get<Student[]>(this.urlStudents + `/searchname?fullName=${name}`).pipe(
+  getStudentByName(name: String,page: number,size: number): Observable<Student[]>{
+    return this.httpStudent.get<Student[]>(this.urlStudents + `/searchname?fullname=${name}&page=${page}&size=${size}`).pipe(
+      map(response => response)
+    )
+  }
+  getStudentsSize(): Observable<number> {
+    return this.httpStudent.get<number>(this.urlStudents + `/length`).pipe(
       map(response => response)
     );
   }
-
-
+  getStudentSizeByName(name: string): Observable<number>{
+    return this.httpStudent.get<number>(this.urlStudents + `/lengthname?name=${name}`).pipe(
+      map(response => response)
+    );
+  }
+  createBasicAuthenticationHttpHeader() {
+    let userName = `gado`;
+    let password = `gado`;
+    let basicAuthHeaderString = `Basic ` + window.btoa(userName + `:` + password); // 64
+    return basicAuthHeaderString;
+  }
 }
-// interface GetResponseStudent {
-//   _embedded: {
-//     students: Student[]
-//   }
-// }
-
-
-
-
+/*
+interface GetResponseStudent {
+  _embedded: {
+    students: Student[]
+  }
+}
+*/

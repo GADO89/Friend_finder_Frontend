@@ -3,7 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 
 
 import { RouterModule, Routes } from '@angular/router';
-import { HttpClientModule } from '@angular/common/http';
+import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import { ReactiveFormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -16,6 +16,7 @@ import { ContentComponent } from './components/content/content.component';
 import {RouteActivatedService} from "./services/route-activated-service.service";
 import {LoginActivatedService} from "./services/login-activated-service.service";
 import {NgbPagination} from "@ng-bootstrap/ng-bootstrap";
+import {HttpIntercepterBaseAuthServiceService} from "./services/http/http-intercepter-base-auth-service.service";
 
 const routes: Routes=[
 
@@ -49,7 +50,9 @@ const routes: Routes=[
     HttpClientModule,
     NgbPagination
   ],
-  providers: [],
+  providers: [
+    {provide:HTTP_INTERCEPTORS,useClass: HttpIntercepterBaseAuthServiceService,multi: true}
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
