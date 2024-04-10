@@ -1,10 +1,10 @@
- import { Component, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
-import {LoginService} from "../../services/login.service";
-import {Router} from "@angular/router";
- import {Spacevalidator} from "../../model/spacevalidator";
-
-
+import {LoginService} from '../../services/login.service';
+import {Router, Routes} from '@angular/router';
+import validate = WebAssembly.validate;
+import {Spacevalidator} from '../../model/spacevalidator';
+import {AuthenticationService} from "../../services/authentication.service";
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
@@ -12,18 +12,19 @@ import {Router} from "@angular/router";
 })
 export class RegisterComponent implements OnInit {
 
-  logInFormGroup!: FormGroup;
-  invalidMessage!: string;
+  logInFormGroup: FormGroup;
+  invalidMessage: string;
 
   constructor(private formBuilder: FormBuilder,
-              private loginService: LoginService,
+              //private loginService: LoginService,
+              private auth: AuthenticationService,
               private route: Router) { }
 
   ngOnInit(): void {
     this.logInFormGroup = this.formBuilder.group({
       admin: this.formBuilder.group({
         userName: new FormControl('',[Validators.required,Validators.minLength(5),Spacevalidator.noOnlyWithSpace]),
-        password: new FormControl('',[Validators.required,Validators.minLength(5), Spacevalidator.noOnlyWithSpace])
+        password: new FormControl('',[Validators.required,Validators.minLength(5)])
       })
     })
   }
@@ -38,14 +39,25 @@ export class RegisterComponent implements OnInit {
     if(this.logInFormGroup.invalid){
       this.logInFormGroup.markAllAsTouched();
     } else {
-      // @ts-ignore
-      const result = this.loginService.login(this.logInFormGroup.get('admin').value.userName,this.logInFormGroup.get('admin').value.password)
+      /*const result = this.loginService.login(this.logInFormGroup.get('admin').value.userName,this.logInFormGroup.get('admin').value.password)
       if(result == true){
         this.route.navigateByUrl('students');
       } else {
         this.invalidMessage = 'Invalid UserName and Password';
         this.showMessage()
       }
+       */
+      this.auth.executeAuthentication(this.logInFormGroup.get('admin').value.userName,this.logInFormGroup.get('admin').value.password)
+        .subscribe(
+          data => {
+            // @ts-ignore
+            console.log(data.message)
+            this.route.navigateByUrl('students');
+          }, error => {
+            this.invalidMessage = 'Invalid UserName and Password';
+            this.showMessage()
+          }
+        )
     }
 
   }

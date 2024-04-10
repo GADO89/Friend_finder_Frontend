@@ -11,12 +11,12 @@ import { FooterComponent } from './components/footer/footer.component';
 import { HeaderComponent } from './components/header/header.component';
 import { OptionsComponent } from './components/options/options.component';
 import { StudentsComponent } from './components/students/students.component';
-import {RegisterComponent} from "./components/register/register.component";
 import { ContentComponent } from './components/content/content.component';
 import {RouteActivatedService} from "./services/route-activated-service.service";
 import {LoginActivatedService} from "./services/login-activated-service.service";
 import {NgbPagination} from "@ng-bootstrap/ng-bootstrap";
 import {HttpIntercepterBaseAuthServiceService} from "./services/http/http-intercepter-base-auth-service.service";
+import {RegisterComponent} from "./components/register/register.component";
 
 const routes: Routes=[
 

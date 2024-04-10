@@ -14,7 +14,7 @@ import {Spacevalidator} from "../../model/spacevalidator";
 })
 export class OptionsComponent implements OnInit {
 
-  studentGroup!:FormGroup;
+  studentGroub!:FormGroup;
   invalidFullName: String
   id!:number;
   myStudent: Student =new Student(0,"","","","", "");
@@ -29,17 +29,17 @@ export class OptionsComponent implements OnInit {
      this.serviceStudent.getStudent(this.id).subscribe(
        response =>  {
          this.myStudent =  response,
-           this.studentGroup.get("student.userName").patchValue(response.fullName),
-           this.studentGroup.get("student.age").patchValue(response.age),
-           this.studentGroup.get("student.address").patchValue(response.address),
-           this.studentGroup.get("student.phone").patchValue(response.phone),
-           this.studentGroup.get("student.gender").patchValue(response.gender)
+           this.studentGroub.get("student.userName").patchValue(response.fullName),
+           this.studentGroub.get("student.age").patchValue(response.age),
+           this.studentGroub.get("student.address").patchValue(response.address),
+           this.studentGroub.get("student.phone").patchValue(response.phone),
+           this.studentGroub.get("student.gender").patchValue(response.gender)
        }
 
      )
      }
 
-    this.studentGroup = this.formBuilder.group({
+    this.studentGroub = this.formBuilder.group({
       student: this.formBuilder.group({
         userName:new FormControl('',[Validators.required, Validators.minLength(5),Spacevalidator.noOnlyWithSpace]),
         age:new FormControl('',[Validators.required, Validators.maxLength(2),Validators.pattern("^[0-9]*$"),Spacevalidator.noOnlyWithSpace]),
@@ -51,34 +51,34 @@ export class OptionsComponent implements OnInit {
   })
 }
    getUserName(){
-    return this.studentGroup.get("student")?.value.userName;
+    return this.studentGroub.get("student")?.value.userName;
    }
    getAge(){
-    return this.studentGroup.get("student")?.value.age;
+    return this.studentGroub.get("student")?.value.age;
   }   getAddress(){
-    return this.studentGroup.get("student")?.value.address;
+    return this.studentGroub.get("student")?.value.address;
   }   getPhone(){
-    return this.studentGroup.get("student")?.value.phone;
+    return this.studentGroub.get("student")?.value.phone;
   }   getGender(){
-    return this.studentGroup.get("student")?.value.gender;
+    return this.studentGroub.get("student")?.value.gender;
   }
   get userName(){
-    return this.studentGroup.get("student.userName");
+    return this.studentGroub.get("student.userName");
   }
   get age(){
-    return this.studentGroup.get("student.age");
+    return this.studentGroub.get("student.age");
   }   get address(){
-    return this.studentGroup.get("student.address");
+    return this.studentGroub.get("student.address");
   }   get phone(){
-    return this.studentGroup.get("student.phone");
+    return this.studentGroub.get("student.phone");
   }   get gender(){
-    return this.studentGroup.get("student.gender");
+    return this.studentGroub.get("student.gender");
   }
 
   Done() {
     const stu=new Student(this.id,this.getUserName(), this.getGender(), this.getAge(), this.getPhone(), this.getAddress());
-    if(this.studentGroup.invalid){
-      this.studentGroup.markAllAsTouched();
+    if(this.studentGroub.invalid){
+      this.studentGroub.markAllAsTouched();
     } else {
       if (this.id ==0){
         this.serviceStudent.addStudent(stu).subscribe(

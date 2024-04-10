@@ -9,7 +9,7 @@ export class LoginService {
   constructor() { }
 
   login(userName: string,password: string){
-    if(userName== 'gadoo' && password=='11111'){
+    if(userName== 'gadoo' && password=='gadoo'){
       sessionStorage.setItem("isRegister",userName);
       return true;
     }

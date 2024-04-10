@@ -15,7 +15,6 @@ export class StudentsComponent implements OnInit{
   message!: String;
   page?: number=1;
   size?:number=3;
-  // @ts-ignore
   numElement: number ;
   fullname: string= "";
 
@@ -28,7 +27,7 @@ export class StudentsComponent implements OnInit{
       const result = this.route.snapshot.paramMap.has("name");
       if (result== true){
         this.fullname = this.route.snapshot.paramMap.get("name");
-        this.getStudentsByName()
+        this.getStudentByName()
       } else {
         this.getStudents();
       }
@@ -38,7 +37,10 @@ export class StudentsComponent implements OnInit{
 
   getStudents(){
     this.studentService.getStudents(this.page-1, this.size).subscribe(
-      data => this.students = data
+      data => {
+        this.students = data,
+          this.getElementsStudents();
+      }
     );
   }
 
@@ -54,7 +56,7 @@ export class StudentsComponent implements OnInit{
     );
   }
 
-  getStudentsByName() {
+  getStudentByName() {
     this.studentService.getStudentByName(this.fullname,this.page-1,this.size).subscribe(
       data =>this.students = data
     );
