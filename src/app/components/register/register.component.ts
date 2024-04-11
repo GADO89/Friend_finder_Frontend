@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
-import {LoginService} from '../../services/login.service';
 import {Router, Routes} from '@angular/router';
 import validate = WebAssembly.validate;
 import {Spacevalidator} from '../../model/spacevalidator';
@@ -39,19 +38,9 @@ export class RegisterComponent implements OnInit {
     if(this.logInFormGroup.invalid){
       this.logInFormGroup.markAllAsTouched();
     } else {
-      /*const result = this.loginService.login(this.logInFormGroup.get('admin').value.userName,this.logInFormGroup.get('admin').value.password)
-      if(result == true){
-        this.route.navigateByUrl('students');
-      } else {
-        this.invalidMessage = 'Invalid UserName and Password';
-        this.showMessage()
-      }
-       */
       this.auth.executeAuthentication(this.logInFormGroup.get('admin').value.userName,this.logInFormGroup.get('admin').value.password)
         .subscribe(
           data => {
-            // @ts-ignore
-            console.log(data.message)
             this.route.navigateByUrl('students');
           }, error => {
             this.invalidMessage = 'Invalid UserName and Password';

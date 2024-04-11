@@ -1,11 +1,10 @@
-
-import { Component, OnInit } from '@angular/core';
-import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {Student} from "../../model/student";
-import {StudentService} from "../../services/Student.service";
+import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
+import {Component, OnInit} from "@angular/core";
 import {ActivatedRoute, Router} from "@angular/router";
-import {response} from "express";
+import {StudentService} from "../../services/Student.service";
 import {Spacevalidator} from "../../model/spacevalidator";
+
 
 @Component({
   selector: 'app-options',
@@ -14,143 +13,98 @@ import {Spacevalidator} from "../../model/spacevalidator";
 })
 export class OptionsComponent implements OnInit {
 
-  studentGroub!:FormGroup;
-  invalidFullName: String
-  id!:number;
-  myStudent: Student =new Student(0,"","","","", "");
-  constructor(private formBuilder:FormBuilder,
-            private  serviceStudent: StudentService, private router: Router,
+  studentGroub: FormGroup;
+  invalidFullName: String;
+  id: number;
+  myStudent: Student = new Student(0,"","","","","");
+
+  constructor(private formBuilder: FormBuilder,private serviceStudent: StudentService,private router: Router,
               private route: ActivatedRoute) { }
 
   ngOnInit(): void {
-     // @ts-ignore
     this.id = +this.route.snapshot.paramMap.get('id');
-     if (this.id !=-1){
-     this.serviceStudent.getStudent(this.id).subscribe(
-       response =>  {
-         this.myStudent =  response,
-           this.studentGroub.get("student.userName").patchValue(response.fullName),
-           this.studentGroub.get("student.age").patchValue(response.age),
-           this.studentGroub.get("student.address").patchValue(response.address),
-           this.studentGroub.get("student.phone").patchValue(response.phone),
-           this.studentGroub.get("student.gender").patchValue(response.gender)
-       }
-
-     )
-     }
-
+    if(this.id != 0){
+      this.serviceStudent.getStudent(this.id).subscribe(
+        response => {
+          this.myStudent = response,
+            this.studentGroub.get("student.userName").patchValue(response.fullName),
+            this.studentGroub.get("student.age").patchValue(response.age),
+            this.studentGroub.get("student.address").patchValue(response.address),
+            this.studentGroub.get("student.phone").patchValue(response.phone),
+            this.studentGroub.get("student.gender").patchValue(response.gender)
+        }
+      )
+    }
     this.studentGroub = this.formBuilder.group({
       student: this.formBuilder.group({
-        userName:new FormControl('',[Validators.required, Validators.minLength(5),Spacevalidator.noOnlyWithSpace]),
-        age:new FormControl('',[Validators.required, Validators.maxLength(2),Validators.pattern("^[0-9]*$"),Spacevalidator.noOnlyWithSpace]),
-        address:new FormControl('',[Validators.required]),
-        phone:new FormControl('',[Validators.required, Validators.maxLength(11), Validators.minLength(11),Validators.pattern("^[0-9]*$"),Spacevalidator.noOnlyWithSpace]),
-        gender:['MALE'],
-
+        userName: new FormControl('',[Validators.required,Validators.minLength(5),Spacevalidator.noOnlyWithSpace]),
+        age: new FormControl('',[Validators.required,Validators.maxLength(2),Validators.pattern("^[0-9]*$"),Spacevalidator.noOnlyWithSpace]),
+        address: new FormControl('',[Validators.required]),
+        phone: new FormControl('',[Validators.required,Validators.maxLength(11),Validators.minLength(11),Validators.pattern("^[0-9]*$"),Spacevalidator.noOnlyWithSpace]),
+        gender: ['MALE']
       })
-  })
-}
-   getUserName(){
-    return this.studentGroub.get("student")?.value.userName;
-   }
-   getAge(){
-    return this.studentGroub.get("student")?.value.age;
-  }   getAddress(){
-    return this.studentGroub.get("student")?.value.address;
-  }   getPhone(){
-    return this.studentGroub.get("student")?.value.phone;
-  }   getGender(){
-    return this.studentGroub.get("student")?.value.gender;
+    })
   }
-  get userName(){
+  getUserName() {
+    return this.studentGroub.get("student").value.userName;
+  }
+  getAge() {
+    return this.studentGroub.get("student").value.age;
+  }
+  getAddress() {
+    return this.studentGroub.get("student").value.address;
+  }
+  getPhone() {
+    return this.studentGroub.get("student").value.phone;
+  }
+  getGender() {
+    return this.studentGroub.get("student").value.gender;
+  }
+
+  get userName() {
     return this.studentGroub.get("student.userName");
   }
-  get age(){
+  get age() {
     return this.studentGroub.get("student.age");
-  }   get address(){
+  }
+  get address() {
     return this.studentGroub.get("student.address");
-  }   get phone(){
+  }
+  get phone() {
     return this.studentGroub.get("student.phone");
-  }   get gender(){
+  }
+  get gender() {
     return this.studentGroub.get("student.gender");
   }
-
-  Done() {
-    const stu=new Student(this.id,this.getUserName(), this.getGender(), this.getAge(), this.getPhone(), this.getAddress());
+  done() {
+    const stu = new Student(this.id,this.getUserName(),this.getGender(),this.getAge(),this.getPhone(),this.getAddress());
     if(this.studentGroub.invalid){
       this.studentGroub.markAllAsTouched();
     } else {
-      if (this.id ==0){
+      if(this.id == 0){
         this.serviceStudent.addStudent(stu).subscribe(
           response => {
-            this.router.navigateByUrl('students')
+            this.router.navigateByUrl('/students');
           },
           error => {
-            this.invalidFullName= "Fullname is already Exist"
+            this.invalidFullName = "Full Name alerdy Exist";
             this.showMessage()
           }
         )
-      }  else {
-        this.serviceStudent.editStudent(stu, this.id).subscribe(
+      } else {
+        this.serviceStudent.editStudent(stu,this.id).subscribe(
           response => {
-            this.router.navigateByUrl('students')
+            this.router.navigateByUrl('/students');
           }
         )
       }
     }
+
+
   }
   showMessage(){
     setTimeout(() => {
-      this.invalidFullName =""
+      this.invalidFullName = ""
     },3000)
   }
-
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// import { Component, OnInit } from '@angular/core';
-// import { FormBuilder, FormGroup } from '@angular/forms';
-// import { Router } from '@angular/router';
-// import { StudentService } from '../../services/Student.service';
-//
-// @Component({
-//   selector: 'app-options',
-//   templateUrl: './options.component.html',
-//   styleUrl: './options.component.css'
-// })
-// export class OptionsComponent implements OnInit{
-//
-//   logInFormGroup!: FormGroup;
-//
-//   studentService!: StudentService;
-//
-//
-//    constructor(private formBuilder:FormBuilder,
-//     studentService: StudentService,
-//     private route:Router){}
-//
-//   ngOnInit(): void {
-//    this.logInFormGroup = this.formBuilder.group({
-//     admin: this.formBuilder.group({
-//
-//     })
-//    });
-//   }
-//   onSubmit(formValue: any){
-//     console.log(formValue)
-//   }
-// }

@@ -1,64 +1,61 @@
 import { Component, OnInit } from '@angular/core';
-import { Student } from '../../model/student';
-import {ActivatedRoute} from "@angular/router";
+import {Student} from '../../model/student';
+import {ActivatedRoute} from '@angular/router';
 import {StudentService} from "../../services/Student.service";
-
 
 @Component({
   selector: 'app-students',
   templateUrl: './students.component.html',
-  styleUrl: './students.component.css'
+  styleUrls: ['./students.component.css']
 })
-export class StudentsComponent implements OnInit{
+export class StudentsComponent implements OnInit {
 
-  students: Student[]=[];
-  message!: String;
-  page?: number=1;
-  size?:number=3;
-  numElement: number ;
-  fullname: string= "";
+  students: Student[] = [];
+  message: String;
+  page: number = 1; // 0 1 2 3
+  size: number = 3;
+  numElement: number;
+  fullname: string = "";
 
-
-  constructor(private studentService: StudentService, private route: ActivatedRoute) {
+  constructor(private studentService: StudentService,private route: ActivatedRoute) {
   }
-
   ngOnInit(): void {
     this.route.paramMap.subscribe(() =>{
       const result = this.route.snapshot.paramMap.has("name");
-      if (result== true){
+      if (result == true) {
         this.fullname = this.route.snapshot.paramMap.get("name");
         this.getStudentByName()
       } else {
         this.getStudents();
       }
-    })
+    });
   }
 
-
   getStudents(){
-    this.studentService.getStudents(this.page-1, this.size).subscribe(
+    this.studentService.getStudents(this.page - 1,this.size).subscribe(
       data => {
         this.students = data,
           this.getElementsStudents();
       }
     );
-  }
 
+  }
   getElementsStudents() {
     return this.studentService.getStudentsSize().subscribe(
       data => this.numElement = data
     );
   }
-
   getElementsStudentsByName() {
     return this.studentService.getStudentSizeByName(this.fullname).subscribe(
       data => this.numElement = data
     );
   }
-
-  getStudentByName() {
-    this.studentService.getStudentByName(this.fullname,this.page-1,this.size).subscribe(
-      data =>this.students = data
+  getStudentByName(){ // ah
+    this.studentService.getStudentByName(this.fullname,this.page - 1,this.size).subscribe(
+      data => {
+        this.students = data,
+          this.getElementsStudentsByName()
+      }
     );
   }
   removeStudent(id: number){
@@ -77,14 +74,13 @@ export class StudentsComponent implements OnInit{
     },3000)
   }
 
-
   done() {
     const result = this.route.snapshot.paramMap.has("name");
     if (result == true) {
-      // @ts-ignore
-      this.getStudentsByName()
+      this.getStudentByName()
     } else {
       this.getStudents();
     }
   }
+
 }

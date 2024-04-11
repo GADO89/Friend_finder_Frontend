@@ -15,10 +15,11 @@ import { ContentComponent } from './components/content/content.component';
 import {RouteActivatedService} from "./services/route-activated-service.service";
 import {LoginActivatedService} from "./services/login-activated-service.service";
 import {NgbPagination} from "@ng-bootstrap/ng-bootstrap";
-import {HttpIntercepterBaseAuthServiceService} from "./services/http/http-intercepter-base-auth-service.service";
 import {RegisterComponent} from "./components/register/register.component";
+import {HttpIntercepterBaseAuthServiceService} from "./services/http/http-intercepter-base-auth-service.service";
 
 const routes: Routes=[
+
 
   {path: 'register', component: RegisterComponent,canActivate: [LoginActivatedService]},
   {path: 'content', component: ContentComponent, canActivate: [LoginActivatedService]},
@@ -51,7 +52,7 @@ const routes: Routes=[
     NgbPagination
   ],
   providers: [
-    {provide:HTTP_INTERCEPTORS,useClass: HttpIntercepterBaseAuthServiceService,multi: true}
+     {provide:HTTP_INTERCEPTORS,useClass: HttpIntercepterBaseAuthServiceService,multi: true}
   ],
   bootstrap: [AppComponent]
 })

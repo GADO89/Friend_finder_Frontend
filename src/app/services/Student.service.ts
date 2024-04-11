@@ -3,6 +3,7 @@ import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {Student} from '../model/student';
 import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
+import {API_URL} from "../app.constants";
 
 @Injectable({
   providedIn: 'root'
@@ -10,10 +11,10 @@ import {map} from 'rxjs/operators';
 
 export class StudentService {
 
-  private urlStudents = 'http://localhost:8080/system/students';
+  private urlStudents = `${API_URL}/system/students`;
   constructor(private httpStudent: HttpClient) { }
 
-  getStudents(page: number,size: number): Observable<Student[]> {
+  getStudents(page,size): Observable<Student[]> {
 
     return this.httpStudent.get<Student[]>(this.urlStudents + `?page=${page}&size=${size}`).pipe(
       map(response => response)
@@ -27,7 +28,7 @@ export class StudentService {
     return this.httpStudent.post(this.urlStudents,student);
   }
   getStudent(id: number): Observable<Student>{
-    return this.httpStudent.get<Student>(`http://localhost:8080/system/student?id=${id}`).pipe(
+    return this.httpStudent.get<Student>(`${API_URL}/system/student?id=${id}`).pipe(
       map(response => response)
     );
   }
